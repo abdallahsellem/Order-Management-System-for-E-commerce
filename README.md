@@ -27,8 +27,8 @@ This project is an e-commerce backend service built using **NestJS** and **Prism
 1. **Clone the Repository**
 
     ```bash
-    git clone https://github.com/your-repo/e-commerce-backend.git
-    cd e-commerce-backend
+    git clone https://github.com/abdallahsellem/Order-Management-System-for-E-commerce.git
+    cd Order-Management-System-for-E-commerce
     ```
 
 2. **Environment Variables**
