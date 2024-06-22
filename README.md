@@ -1,73 +1,254 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Project Name: E-Commerce Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is an e-commerce backend service built using **NestJS** and **Prisma ORM**, with a **PostgreSQL** database. The project provides functionalities to manage users, carts, and orders, and is containerized using Docker.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Installation](#installation)
+- [Running the Project](#running-the-project)
+- [API Endpoints](#api-endpoints)
+  - [Cart Management](#cart-management)
+  - [Order Management](#order-management)
+  - [User Management](#user-management)
+- [Database Schema](#database-schema)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
-```bash
-$ npm install
+### Prerequisites
+
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Steps
+
+1. **Clone the Repository**
+
+    ```bash
+    git clone https://github.com/your-repo/e-commerce-backend.git
+    cd e-commerce-backend
+    ```
+
+2. **Environment Variables**
+
+    Create a `.env` file at the root of the project and add the following variables:
+
+    ```bash
+    DATABASE_URL=postgresql://postgres:postgres@db:5432/mydatabase
+    ```
+
+## Running the Project
+
+1. **Build and Start the Containers**
+
+    ```bash
+    docker-compose up --build
+    ```
+
+    This command will build the Docker containers for the backend and the PostgreSQL database, and start them.
+
+2. **Access the Application**
+
+    The application will be available at `http://localhost:3000`.
+
+3. **Database Migration and Initialization**
+
+    The Docker setup will automatically handle database migrations and initialization using Prisma.
+
+## API Endpoints
+
+### Cart Management
+
+- **Add Item to Cart**
+
+    - **URL:** `/cart/add`
+    - **Method:** `POST`
+    - **Body:**
+
+      ```json
+      {
+        "userId": 1,
+        "productId": 2,
+        "quantity": 3
+      }
+      ```
+
+    - **Description:** Adds a product to the user's cart.
+
+- **View Cart**
+
+    - **URL:** `/cart/:userId`
+    - **Method:** `GET`
+    - **Description:** Retrieves the user's cart details by their ID.
+
+- **Update Cart Item**
+
+    - **URL:** `/cart/update`
+    - **Method:** `PUT`
+    - **Body:**
+
+      ```json
+      {
+        "userId": 1,
+        "productId": 2,
+        "quantity": 5
+      }
+      ```
+
+    - **Description:** Updates the quantity of a product in the user's cart.
+
+- **Remove Item from Cart**
+
+    - **URL:** `/cart/remove`
+    - **Method:** `DELETE`
+    - **Body:**
+
+      ```json
+      {
+        "userId": 1,
+        "productId": 2
+      }
+      ```
+
+    - **Description:** Removes a product from the user's cart.
+
+### Order Management
+
+- **Create Order**
+
+    - **URL:** `/orders`
+    - **Method:** `POST`
+    - **Body:**
+
+      ```json
+      {
+        "userId": 1
+      }
+      ```
+
+    - **Description:** Creates a new order for the user.
+
+- **Get Order by ID**
+
+    - **URL:** `/orders/:orderId`
+    - **Method:** `GET`
+    - **Description:** Retrieves order details by order ID.
+
+- **Update Order Status**
+
+    - **URL:** `/orders/:orderId/status`
+    - **Method:** `PUT`
+    - **Body:**
+
+      ```json
+      {
+        "status": "shipped"
+      }
+      ```
+
+    - **Description:** Updates the status of the order.
+
+- **Apply Coupon to Order**
+
+    - **URL:** `/orders/apply-coupon`
+    - **Method:** `POST`
+    - **Body:**
+
+      ```json
+      {
+        "orderId": 1,
+        "discount": 20
+      }
+      ```
+
+    - **Description:** Applies a discount coupon to the order.
+
+### User Management
+
+- **Testing User Controller**
+
+    - **Test File:** `src/user/users.controller.spec.ts`
+    - **Description:** This file contains tests to ensure that the user controller is defined and behaves as expected.
+
+## Database Schema
+
+The database schema is managed using Prisma ORM. Below is the schema definition:
+
+```prisma
+// Prisma schema file (prisma/schema.prisma)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId    Int     @id @default(autoincrement())
+  name      String
+  email     String  @unique
+  password  String
+  address   String?
+  orders    Order[]
+  cart      Cart?
+}
+
+model Product {
+  productId  Int      @id @default(autoincrement())
+  name       String
+  description String?
+  price      Float
+  stock      Int
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+model Order {
+  orderId   Int      @id @default(autoincrement())
+  orderDate DateTime @default(now())
+  status    String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [userId])
+  totalPrice Float
+  discount   Float?
+  orderItems OrderItem[]
+}
+
+model Cart {
+  cartId   Int      @id @default(autoincrement())
+  userId   Int @unique
+  user     User     @relation(fields: [userId], references: [userId])
+  cartItems CartItem[]
+}
+
+model CartItem {
+  cartItemId Int      @id @default(autoincrement())
+  cartId     Int
+  productId  Int
+  quantity   Int
+  cart       Cart     @relation(fields: [cartId], references: [cartId])
+  product    Product  @relation(fields: [productId], references: [productId])
+}
+
+model OrderItem {
+  orderItemId Int      @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  quantity    Int
+  order       Order    @relation(fields: [orderId], references: [orderId])
+  product     Product  @relation(fields: [productId], references: [productId])
+}
 ```
+### Project Structure
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+-` src/: Contains the main source code for the application.`
+- `cart/: Contains the cart controller and service.`
+- `order/: Contains the order controller and service.`
+- `user/: Contains the user controller and related logic.`
+- `prisma/: Contains the Prisma schema and migration files.`
+- `docker-compose.yml: Docker Compose configuration file for the project.`
